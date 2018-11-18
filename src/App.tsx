@@ -12,22 +12,57 @@ function Square(props: any) {
 }
 
 class Board extends React.Component<{}> {
-  state:any = {squares:[]};
-  constructor(props:any) {
+  state: any = { squares: [] };
+  constructor(props: any) {
     super(props);
     this.state = {
       squares: [null, null, null, null, null, null, null, null, null],
-      xIsNext: true
+      xIsNext: true,
+      wins: ''
     };
   }
 
-  handleClick(i:number) {
-    const squares = this.state.squares.slice();
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
-    this.setState({
-      squares: squares,
-      xIsNext: !this.state.xIsNext,
-    });
+  handleClick(i: number) {
+    if (this.state.wins === '') {
+      const squares = this.state.squares.slice();
+      squares[i] = this.state.xIsNext ? 'X' : 'O';
+      this.setState({
+        squares: squares,
+        xIsNext: !this.state.xIsNext,
+      });
+      this.checkWin(squares);
+    }
+  }
+
+  checkWin(s: Array<any>) {
+    let winner = '';
+    if (s[0] !== null && s[0] === s[1] && s[1] === s[2]) {
+      winner = s[0];
+    }
+    if (s[3] !== null && s[3] === s[4] && s[4] === s[5]) {
+      winner = s[3];
+    }
+    if (s[6] !== null && s[6] === s[7] && s[7] === s[8]) {
+      winner = s[6];
+    }
+
+    if (s[0] !== null && s[0] === s[3] && s[3] === s[6]) {
+      winner = s[0];
+    }
+    if (s[1] !== null && s[1] === s[4] && s[4] === s[7]) {
+      winner = s[1];
+    }
+    if (s[2] !== null && s[2] === s[5] && s[5] === s[8]) {
+      winner = s[2];
+    }
+
+    if (s[0] !== null && s[0] === s[4] && s[4] === s[8]) {
+      winner = s[0];
+    }
+    if (s[2] !== null && s[2] === s[4] && s[4] === s[6]) {
+      winner = s[2];
+    }
+    this.setState({ wins: winner });
   }
 
   renderSquare(i: number) {
@@ -44,7 +79,7 @@ class Board extends React.Component<{}> {
 
     return (
       <div>
-        <div className="status">{status}</div>
+        <div className="status">{status}</div> <div>{this.state.wins}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
