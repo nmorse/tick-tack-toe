@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { array } from 'prop-types';
 
-function Square(props: any) {
+type Maybe<T> = T | null;
+
+interface SquareProps {
+  onClick: (event: any) => void;
+  value: Maybe <string>;
+}
+
+function Square(props: SquareProps) {
   return (
     <button className="square" onClick={props.onClick}>
       {props.value}
@@ -11,10 +16,16 @@ function Square(props: any) {
   );
 }
 
-class Board extends React.Component<{}> {
-  state: any = { squares: [] };
-  constructor(props: any) {
-    super(props);
+interface BoardState {
+  squares: Array< Maybe<string> >;
+  xIsNext: boolean;
+  wins: string;
+}
+
+class Board extends React.Component {
+  state: BoardState;
+  constructor() {
+    super({});
     this.state = {
       squares: [null, null, null, null, null, null, null, null, null],
       xIsNext: true,
@@ -33,9 +44,8 @@ class Board extends React.Component<{}> {
       this.checkWin(squares);
     }
   }
-
-  checkWin(s: Array<any>) {
-    let winner = '';
+  checkWin(s: Array< Maybe<string> >): void {
+    let winner: Maybe<string> = '';
     if (s[0] !== null && s[0] === s[1] && s[1] === s[2]) {
       winner = s[0];
     }
@@ -62,6 +72,7 @@ class Board extends React.Component<{}> {
     if (s[2] !== null && s[2] === s[4] && s[4] === s[6]) {
       winner = s[2];
     }
+    if (winner) {winner += " Wins!";}
     this.setState({ wins: winner });
   }
 
